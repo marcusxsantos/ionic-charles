@@ -1,3 +1,4 @@
+import { TabsPage } from './../tabs/tabs';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
@@ -20,6 +21,11 @@ export class IntroPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad IntroPage');
+  }
+
+  public goToTabsPage()
+  {
+    this.navCtrl.push(TabsPage);
   }
 
 }
