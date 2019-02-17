@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
 import { MovieProvider } from '../../providers/movie/movie';
 
 /**
@@ -20,6 +20,9 @@ import { MovieProvider } from '../../providers/movie/movie';
 export class FeedPage {
 
   public lista_filmes = new Array<any>();
+  private loader;
+  private refresher;
+  private isRefresher: boolean = false;
 
   public objeto_feed = {
     titulo: "Marcus Santos",
@@ -35,26 +38,57 @@ export class FeedPage {
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
-    private movieProvider: MovieProvider) 
+    private movieProvider: MovieProvider,
+    public loadingCtrl: LoadingController) 
   {
   }
 
-  public somaDoisNumeros(num1:number, num2:number): void{
-    alert(num1+num2);
+  abrrirCarregando() {
+    this.loader = this.loadingCtrl.create({
+      content: "Carregando...",
+    });
+    this.loader.present();
   }
 
-  ionViewDidLoad() {
+  fecharCarregamento() {
+    this.loader.dismiss();
+  }
+
+  doRefresh(refresher) {
+    this.refresher = refresher;
+    this.isRefresher = true;
+    this.carregarFilmes();
+  }
+
+  ionViewDidEnter() {
+    this.carregarFilmes();
+  }
+
+  carregarFilmes()
+  {
+    this.abrrirCarregando();
     this.movieProvider.getLastestMovies().subscribe(
       data => {
         const response = (data as any);
         //const objeto_retorno = JSON.parse(response._body);
         this.lista_filmes = response.results;
         console.log(response);
+        this.fecharCarregamento();
+        if(this.isRefresher)
+        {
+          this.refresher.complete();
+          this.isRefresher = false;
+        }
       },
       error => {
         console.log(error);
+        this.fecharCarregamento();
+        if(this.isRefresher)
+        {
+          this.refresher.complete();
+          this.isRefresher = false;
+        }
       }
     );
   }
-
 }
