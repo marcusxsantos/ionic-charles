@@ -1,3 +1,4 @@
+import { FilmeDetalhesPage } from './../filme-detalhes/filme-detalhes';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
 import { MovieProvider } from '../../providers/movie/movie';
@@ -23,6 +24,8 @@ export class FeedPage {
   private loader;
   private refresher;
   private isRefresher: boolean = false;
+  private infiniteScroll;
+  public page = 1;
 
   public objeto_feed = {
     titulo: "Marcus Santos",
@@ -64,15 +67,24 @@ export class FeedPage {
     this.carregarFilmes();
   }
 
-  carregarFilmes()
+  carregarFilmes(newpage: boolean = false)
   {
     this.abrrirCarregando();
-    this.movieProvider.getLastestMovies().subscribe(
+    this.movieProvider.getLastestMovies(this.page).subscribe(
       data => {
         const response = (data as any);
         //const objeto_retorno = JSON.parse(response._body);
-        this.lista_filmes = response.results;
-        console.log(response);
+
+        if(newpage)
+        {
+          this.lista_filmes = this.lista_filmes.concat(response.results);
+          this.infiniteScroll.complete();
+        }
+        else
+        {
+          this.lista_filmes = response.results;
+        }
+        
         this.fecharCarregamento();
         if(this.isRefresher)
         {
@@ -90,5 +102,14 @@ export class FeedPage {
         }
       }
     );
+  }
+  doInfinite(infiniteScroll) {
+    this.page++;
+    this.infiniteScroll = infiniteScroll;
+    this.carregarFilmes(true);
+  }
+
+  abrirDetalhes(filme){
+    this.navCtrl.push(FilmeDetalhesPage, { id: filme.id});
   }
 }

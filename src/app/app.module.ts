@@ -1,3 +1,4 @@
+import { FilmeDetalhesPage } from './../pages/filme-detalhes/filme-detalhes';
 import { PerfilPageModule } from './../pages/perfil/perfil.module';
 import { SobrePageModule } from './../pages/sobre/sobre.module';
 import { HttpModule } from "@angular/http";
@@ -19,6 +20,7 @@ import { IntroPageModule } from "../pages/intro/intro.module";
 import { MovieProvider } from '../providers/movie/movie';
 import { ConfigProvider } from '../providers/config/config';
 import { ConfiguracoesPageModule } from "../pages/configuracoes/configuracoes.module";
+import { FilmeDetalhesPageModule } from '../pages/filme-detalhes/filme-detalhes.module';
 
 @NgModule({
   declarations: [MyApp, AboutPage, ContactPage, HomePage, TabsPage],
@@ -31,7 +33,8 @@ import { ConfiguracoesPageModule } from "../pages/configuracoes/configuracoes.mo
     IntroPageModule,
     ConfiguracoesPageModule,
     SobrePageModule,
-    PerfilPageModule
+    PerfilPageModule,
+    FilmeDetalhesPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [MyApp, AboutPage, ContactPage, HomePage, TabsPage],
